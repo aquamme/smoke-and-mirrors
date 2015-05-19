@@ -839,6 +839,25 @@ export default ContainerView.extend(TargetActionSupport, MagicArrayMixin, {
 
   },
 
+  // TODO: perhaps this should instead trigger a 'recalculateHeight' method on the childViews 
+  /**!
+   * Dynamically update the default height of each element
+   */
+  _defaultHeightDidChange: observer('defaultHeight', function() {
+    this.set('_defaultHeight', null);
+
+    schedule('render', this, function() {
+      this._childViews.forEach(childView => {
+        let height = this.__getEstimatedDefaultHeight();
+        childView.set('defaultHeight', height);
+        childView.set('_height', 0);
+        childView.element.style.minHeight = height + 'px';
+      });
+
+      next(this, this._cycleViews);
+    });
+  }),
+
   __getEstimatedDefaultHeight: function() {
 
     var _defaultHeight = this.get('_defaultHeight');
