@@ -739,14 +739,7 @@ export default ContainerView.extend(TargetActionSupport, MagicArrayMixin, {
         last.scrollIntoView(false);
       }
     } else if (topVisibleKey) {
-      var content = this.get('__content'), topVisibleIndex;
-
-      for (let i = 0; i < content.get('length'); i++) {
-        if (topVisibleKey === content.objectAt(i).get('__key')) {
-          topVisibleIndex = i;
-        }
-      }
-      this.get('_container').get(0).scrollTop = (topVisibleIndex || 0) * this.__getEstimatedDefaultHeight();
+      this.scrollTo(topVisibleKey);
     }
 
     next(this, function() {
@@ -755,6 +748,17 @@ export default ContainerView.extend(TargetActionSupport, MagicArrayMixin, {
       this._cycleViews();
     });
 
+  },
+
+  scrollTo: function (topVisibleKey) {
+    var content = this.get('__content'), topVisibleIndex;
+
+    for (let i = 0; i < content.get('length'); i++) {
+      if (topVisibleKey === content.objectAt(i).get('__key')) {
+        topVisibleIndex = i;
+      }
+    }
+    this.get('_container').get(0).scrollTop = (topVisibleIndex || 0) * this.__getEstimatedDefaultHeight();
   },
 
   /**!
@@ -883,12 +887,13 @@ export default ContainerView.extend(TargetActionSupport, MagicArrayMixin, {
 
   },
 
-  // TODO: perhaps this should instead trigger a 'recalculateHeight' method on the childViews 
   /**!
    * Dynamically update the default height of each element
    */
   _defaultHeightDidChange: observer('defaultHeight', function() {
     this.set('_defaultHeight', null);
+    
+    var key = this.get('_topVisible.content.content.' + this.get('keyForId'));
 
     schedule('render', this, function() {
       this._childViews.forEach(childView => {
@@ -897,6 +902,8 @@ export default ContainerView.extend(TargetActionSupport, MagicArrayMixin, {
         childView.set('_height', 0);
         childView.element.style.minHeight = height + 'px';
       });
+
+      this.scrollTo(key);
 
       next(this, this._cycleViews);
     });
