@@ -687,11 +687,6 @@ export default ContainerView.extend(TargetActionSupport, MagicArrayMixin, {
 
     // TODO This may need vendor prefix detection
     _container.css({
-      '-webkit-transform' : 'translate3d(0,0,0)',
-      '-moz-transform'    : 'translate3d(0,0,0)',
-      '-ms-transform'     : 'translate3d(0,0,0)',
-      '-o-transform'      : 'translate3d(0,0,0)',
-      'transform'         : 'translate3d(0,0,0)',
       '-webkit-overflow-scrolling': 'touch',
       'overflow-scrolling': 'touch'
     });
