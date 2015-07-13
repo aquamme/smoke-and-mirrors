@@ -887,12 +887,14 @@ export default ContainerView.extend(TargetActionSupport, MagicArrayMixin, {
    */
   _defaultHeightDidChange: observer('defaultHeight', function() {
     this.set('_defaultHeight', null);
+    var defaultHeight = this.__getEstimatedDefaultHeight();
     
     var key = this.get('_topVisible.content.content.' + this.get('keyForId'));
 
     schedule('render', this, function() {
       this._childViews.forEach(childView => {
-        let height = this.__getEstimatedDefaultHeight();
+        let vs = childView.get('viewState');
+        let height = vs === 'visible' || vs === 'hidden' ? 0 : defaultHeight;
         childView.set('defaultHeight', height);
         childView.set('_height', 0);
         childView.element.style.minHeight = height + 'px';
