@@ -2,13 +2,14 @@ import Ember from "ember";
 import getTagDescendant from "../utils/get-tag-descendant";
 import nextFrame from "../utils/next-frame";
 import Scheduler from "../utils/backburner-ext";
+import DynamicResizeMixin from '../mixins/dynamic-resize';
 
 const {
   get: get,
   Component,
   assert,
   on,
-  observer,
+  observer
 } = Ember;
 
 const jQuery = Ember.$;
@@ -25,7 +26,7 @@ function valueForIndex(arr, index) {
   return arr.objectAt ? arr.objectAt(index) : arr[index];
 }
 
-export default Component.extend({
+export default Component.extend(DynamicResizeMixin, {
 
   //–––––––––––––– Required Settings
 
